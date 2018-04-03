@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+<!-- resource/mapper/board.xml -->
+<mapper namespace="com.study.board.dao.IBoardDao">
+  <sql id="boardListWhereClause" >
+  	<where>
+		 <if test="searchWord != null and searchWord != '' ">
+		 	<choose>
+		 		<when test="searchType == 'all' ">
+		 		bo_title LIKE '%' || #{searchWord} || '%'
+		 	OR bo_writer LIKE '%' || #{searchWord} || '%'
+		 	OR bo_content LIKE '%' || #{searchWord} || '%'
+		 		</when>
+		 		
+		 		<when test="searchType == 'bo_title'">
+		 			bo_title LIKE '%' || #{searchWord} || '%'
+		 		</when>
+		 		
+		 		<when test="searchType == 'bo_writer'">
+		 			bo_writer LIKE '%' || #{searchWord} || '%'
+		 		</when>
+		 		
+		 		<when test="searchType == 'bo_content'">
+		 			bo_content LIKE '%' || #{searchWord} || '%'
+		 		</when>
+		 	</choose>		 
+		 </if>
+		</where>
+  </sql>
+	
+	<!-- resultType = 리턴값 -->
+	<!-- parameterType 메소드에 매개변수값 -->
+	
+	<select id="getBoardList" parameterType="boardSearch" resultType="com.study.board.vo.Board" >
+	<include refid="common.prePaging"></include>
+		SELECT                                                      
+		 bo_no
+	   , bo_title
+	   , bo_writer
+	   , bo_passwd
+	   , bo_email
+	   , bo_ip
+	   , bo_read_cnt
+	   , TO_CHAR(bo_reg_date, 'YYYY/MM/DD') AS bo_reg_date
+	   , TO_CHAR(bo_mod_date, 'YYYY/MM/DD') AS bo_mod_date
+	 	FROM tb_board
+	 	<include refid="boardListWhereClause" />
+	 	ORDER BY bo_no DESC
+	 <include refid="common.postPaging"></include>
+	</select>
+	
+	<select id="getBoardCount" parameterType="boardSearch" resultType="int" >
+		 SELECT count(*) FROM tb_board 
+		 <include refid="boardListWhereClause"></include>
+	</select>
+	
+	<select id="getBoard" parameterType="int" resultType="board" >
+		 SELECT                                                    
+		 bo_no                                                
+	   , bo_title                                             
+	   , bo_writer                                            
+	   , bo_passwd                                            
+	   , bo_email                                             
+	   , bo_content                                           
+	   , bo_ip                                                
+	   , bo_read_cnt                                          
+	   , TO_CHAR(bo_reg_date, 'YYYY/MM/DD') AS bo_reg_date  
+	   , TO_CHAR(bo_mod_date, 'YYYY/MM/DD') AS bo_mod_date    
+	 FROM tb_board                                           
+	 WHERE bo_no = #{bo_no}                                          
+	</select>
+	
+	<insert id="insertBoard" parameterType="board" >
+  	 INSERT INTO tb_board                                         
+(bo_no, bo_title, bo_writer, bo_passwd, bo_email, bo_content) 
+ VALUES ( seq_board.nextval, #{bo_title}, #{bo_writer}, #{bo_passwd}, #{bo_email}, #{bo_content})                 
+  </insert>
+  
+  <update id="updateBoard" parameterType="board"  >
+		UPDATE tb_board         
+   SET bo_title  = #{bo_title}  
+     , bo_passwd = #{bo_passwd}  
+     , bo_email = #{bo_email}  
+     , bo_content = #{bo_content} 
+ WHERE bo_no  = #{bo_no}   
+	</update>
+</mapper>

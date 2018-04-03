@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<!-- resource/mapper/member.xml -->
+<!-- namespace는 다른 mapper와 구분을 해줌  !! -->
+<!-- namespace 권장명칭은 dao의 완전한 이름으로해야함...ㅠ -->
+
+<mapper namespace="com.study.member.dao.IMemberDao">
+
+<select id="getMemberList" resultType="com.study.member.vo.Member"> <!-- 메서드 이름  -->
+	
+	SELECT                                                 
+		 mem_id
+	   , mem_name
+	   , mem_pw
+	   , mem_phone
+	   , mem_email
+	   , TO_CHAR(reg_date, 'YYYY/MM/DD') AS reg_date
+	 FROM tb_member2
+	 ORDER BY reg_date ASC
+	
+</select>
+  
+<select id="getMember" parameterType="String" resultType="com.study.member.vo.Member">
+	SELECT                                                           
+		 mem_id
+	   , mem_name
+	   , mem_pw
+	   , mem_phone
+	   , mem_email
+	   , TO_CHAR(reg_date, 'YYYY/MM/DD HH24:MI') AS reg_date
+	 FROM tb_member2
+	WHERE mem_id = #{mem_id}
+</select>
+
+	<update id="updateMember" parameterType="com.study.member.vo.Member">
+		UPDATE tb_member2    
+   	SET mem_name  = #{mem_name}
+     , mem_phone = #{mem_phone} 
+     , mem_email = #{mem_email} 
+ 	WHERE mem_id  = #{mem_id}
+	</update>
+  
+  <insert id="insertMember" parameterType="com.study.member.vo.Member" >
+  	INSERT INTO tb_member2                                        
+	(mem_id, mem_pw, mem_name, mem_phone, mem_email, reg_date )   
+ 	VALUES (  #{mem_id}, #{mem_pwd}, #{mem_name}, #{mem_phone}, #{mem_email} , SYSDATE )                           
+  </insert>
+</mapper>

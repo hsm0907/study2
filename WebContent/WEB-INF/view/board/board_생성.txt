@@ -1,0 +1,13 @@
+-- 게시판 테이블 생성
+
+bo_no number not null -- 글번호
+bo_title varchar2(250) not null, -- 제목
+bo_writer varchar2(20) not null, -- 작성자
+bo_passwd varchar2(30) not null, -- 비번
+bo_email varchar2(60) ,			 -- 이메일
+bo_content clob, -- 내용
+bo_read_cnt number(6), -- default 0, -- 조회수 
+bo_reg_date default sysdate, -- 등록일
+bo_mod_date date default sysdate , -- 수정애리
+constraint pk_board primary key (bo_no)
+);
