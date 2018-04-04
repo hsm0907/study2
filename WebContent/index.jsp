@@ -12,7 +12,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>/ index.jsp </title>
-<style >
+<style>
 	#header {}
 	#left {width: 20%; float:left;}
 	#contents {width: 80%; float: left;}

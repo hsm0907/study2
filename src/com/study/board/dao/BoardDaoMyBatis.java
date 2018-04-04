@@ -56,6 +56,7 @@ public class BoardDaoMyBatis implements IBoardDao{
 		
 		try {
 			 int cnt = session.insert(nameSpace + "insertBoard", board);
+			 session.commit();
 			return cnt;
 		} finally {
 			session.close();
@@ -68,6 +69,7 @@ public class BoardDaoMyBatis implements IBoardDao{
 		
 		try {
 			 int cnt = session.update(nameSpace + "updateBoard", board);
+			 session.commit();
 			return cnt;
 		} finally {
 			session.close();
@@ -80,6 +82,7 @@ public class BoardDaoMyBatis implements IBoardDao{
 		
 		try {
 			 int cnt = session.delete(nameSpace + "deleteBoard", board);
+			 session.commit();
 			return cnt;
 		} finally {
 			session.close();

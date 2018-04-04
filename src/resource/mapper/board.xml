@@ -76,9 +76,13 @@
 	</select>
 	
 	<insert id="insertBoard" parameterType="board" >
+	<selectKey keyProperty="bo_no" order="BEFORE" resultType="int">
+		SELECT seq_board.nextval FROM dual
+	</selectKey>
+	
   	 INSERT INTO tb_board                                         
 (bo_no, bo_title, bo_writer, bo_passwd, bo_email, bo_content) 
- VALUES ( seq_board.nextval, #{bo_title}, #{bo_writer}, #{bo_passwd}, #{bo_email}, #{bo_content})                 
+ VALUES ( #{bo_no}, #{bo_title}, #{bo_writer}, #{bo_passwd}, #{bo_email}, #{bo_content})                 
   </insert>
   
   <update id="updateBoard" parameterType="board"  >

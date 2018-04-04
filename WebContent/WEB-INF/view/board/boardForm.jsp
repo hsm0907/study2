@@ -15,7 +15,7 @@
 <body>
 <div class="container">
 <div class="page-header">
-	<h2>회원 등록</h2>
+	<h2>게시판 등록</h2>
 </div>
 
 <form action="boardInsert.do" method="post">

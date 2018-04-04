@@ -29,6 +29,7 @@
 <div class="row">
 	<div class="col-md-6 col-xs-4">
 		<a href="boardList.do" class="btn btn-sm btn-warning">목록으로</a>
+		<a href="boardView.do?bo_no=${board.bo_no }" class="btn btn-sm btn-warning">게시글 보기</a>
 	</div>
 </div>
 

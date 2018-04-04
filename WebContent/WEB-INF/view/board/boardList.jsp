@@ -13,7 +13,7 @@
 	 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	 <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
-	 <script src="<%=request.getContextPath()%>/jquery/3.3.1/jquery.min.js"></script>\
+	 <script src="<%=request.getContextPath()%>/js/jquery-3.3.1.js"></script>
 	 <style>
 	 	li {
 	 		width : 35px; 
@@ -28,17 +28,51 @@
 		<h1>게시판 목록</h1>
 	</div>
 	
+	<script type="text/javascript">
+	$(function() {
+		$(".pagination li a").click(function() {
+			// 페이지값 구하고
+			// form 에 설정하고
+			// form submit
+			console.log($(this).data("page"));
+			var frm = document.forms.frm_search;
+			frm.currentPage.value = $(this).data("page");
+			frm.submit();
+		});
+		
+		$('select[name="listSize"]').change(function(){
+			// this 를 구하고 from에 설정하고, form submit
+			console.log(this.value, $(this).val() );
+			var frm = document.forms.frm_search;
+			frm.listSize.value = this.value;
+			frm.submit();
+		});
+		
+		/* var init=function(){
+			alert("페이지가 로드하고나서 스크립트로 처리~~")
+			$('[name="currentPage"]').val(${search.currentPage};)
+			$('[name="listSize"]').val(${search.listSize})
+		} */
+	});
+	</script>
+	
 	<div class="row">
 		<!-- 검색폼!! -->
-		<form action="boardList.do" method="post">
+		<form action="boardList.do" method="post" class="form-inline" name="frm_search">
+		<input type="hidden" name="currentPage" value="${search.currentPage }" >
+		<input type="hidden" name="listSize" value="${search.listSize }" >
+		<div class="form-group">
 		검색구분 : <select name="searchType">
-					<option value="all">전체</option>
-					<option value="bo_title">제목</option>
-					<option value="bo_writer">작성자</option>
-					<option value="bo_content">내용</option>
+					<option value="all" ${search.searchType == 'all' ? 'selected= "selected"' : '' }>전체</option>
+					<option value="bo_title" ${search.searchType == 'bo_title' ? 'selected= "selected"' : '' }>제목</option>
+					<option value="bo_writer" ${search.searchType == 'bo_writer' ? 'selected= "selected"' : '' }>작성자</option>
+					<option value="bo_content" ${search.searchType == 'bo_content' ? 'selected= "selected"' : '' }>내용</option>
 				   </select>
+		</div>
+		<div class="form-group">
 			<input type="text" name="searchWord" value="${search.searchWord }">
-			<button type="submit">검색</button>
+		</div>
+			<button type="submit" class="btn btn-primary">검색</button>
 	</form>
 	</div>
 	
@@ -49,19 +83,27 @@
 	</div>
 	<div class = "row">
 
+${search.totalRowCount } / ${search.totalPageCount }
 
-	전체 레코드 갯수 : ${search.totalRowCount } <br/> 
+	<%-- 전체 레코드 갯수 : ${search.totalRowCount } <br/>  --%>
+
+<select name="listSize">
+	<option value="5"  ${search.listSize == '5' ? 'selected= "selected"' : '' }>5</option>
+	<option value="10" ${search.listSize == '10' ? 'selected= "selected"' : '' }>10</option>
+	<option value="20" ${search.listSize == '20' ? 'selected= "selected"' : '' }>20</option>
+	<option value="30" ${search.listSize == '30' ? 'selected= "selected"' : '' }>30</option>
+</select>
 
 	전체 페이지 갯수 : ${search.totalPageCount } <br/>
 
-	시작 페이지 : ${search.startPage} <br/>
+	<%-- 시작 페이지 : ${search.startPage} <br/>
 
 	마지막 페이지 : ${search.endPage} <br/>
 
 	페이지 사이즈 : ${search.pageSize} <br/>
 
 	현재 페이지 : ${search.currentPage} <br/>
-
+ --%>
 	<table class = "table table-striped">
 		<colgroup>   <!-- 게시판 너비  -->
 			<col style = "width: 8%"/>
@@ -110,19 +152,24 @@
 			<ul class="pagination">
     			<c:if test = "${search.startPage > 1}">
 					<li>
-		      			<a href = "boardList.do?currentPage=${search.startPage - 1}">
-		        			<span aria-hidden="true">&lt;</span>
+		      			<a href = "#" data-page="${search.startPage - 1}">
+		        			<span aria-hidden="true">&laquo;</span>
 		      			</a>
 	    			</li>
     			</c:if>
 
 				<c:forEach var = "i" begin ="${search.startPage}" end = "${search.endPage}">
-							<li><a href = "boardList.do?currentPage=${i}">${i}</a></li>
+					<c:if test="${i eq search.currentPage }">
+						<li class="active"><a href="#">${i }</a></li>
+					</c:if>
+					<c:if test="${i ne search.currentPage }">
+						<li><a href="#" data-page="${i}" >${i}</a></li>
+					</c:if>
 				</c:forEach>
+				
 				<c:if test = "${search.endPage < search.totalPageCount}">
-					<li>
-		      				<a href = "boardList.do?currentPage=${search.endPage + 1}">
-		        			<span aria-hidden="true">&gt;</span>
+					<li><a href = "#" data-page="${search.endPage + 1}">
+		        			<span aria-hidden="true">&raquo;</span>
 		      			</a>
 	    			</li>
 				</c:if>
